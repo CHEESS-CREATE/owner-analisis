@@ -3,27 +3,19 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>SAHAMPRO - Dashboard Analisa</title>
+    <title>SAHAMPRO - Dashboard Analisa Lengkap</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;700;800&display=swap');
-        body { font-family: 'Plus Jakarta Sans', sans-serif; background-color: #0f172a; }
+        body { font-family: 'Plus Jakarta Sans', sans-serif; background-color: #0f172a; color: white; }
     </style>
 </head>
 <body class="p-4 md:p-8">
 
     <div class="max-w-7xl mx-auto">
-        <nav class="mb-8 flex justify-between items-center">
-            <span class="text-2xl font-black text-white">SAHAM<span class="text-emerald-400">PRO</span></span>
-            <span class="text-emerald-400 text-sm font-bold border border-emerald-500 px-3 py-1 rounded-lg">Analisa Real-Time</span>
-        </nav>
-        
-        <header class="mb-10">
-            <h1 class="text-3xl md:text-5xl font-black text-white">Pusat Analisa Saham</h1>
-            <p class="text-gray-400 mt-2">Cari kode saham (Contoh: BBCA, TLKM, GOTO) untuk melihat analisa lengkap.</p>
-        </header>
+        <h1 class="text-3xl font-black mb-6">SAHAM<span class="text-emerald-400">PRO</span></h1>
 
-        <div class="h-[600px] w-full bg-[#1e293b] rounded-3xl overflow-hidden border border-gray-800 shadow-2xl">
+        <div class="h-[500px] w-full mb-6 bg-[#1e293b] rounded-2xl overflow-hidden border border-gray-800">
             <div class="tradingview-widget-container" style="height:100%;width:100%">
                 <div id="tradingview_chart" style="height:100%;width:100%"></div>
                 <script type="text/javascript" src="https://s3.tradingview.com/tv.js"></script>
@@ -34,20 +26,51 @@
                         "theme": "dark",
                         "autosize": true,
                         "interval": "D",
-                        "timezone": "Asia/Jakarta",
                         "allow_symbol_change": true,
-                        "details": true,
-                        "calendar": true,
-                        "hotlist": true
+                        "details": true // Menampilkan Fundamental Dasar (Market Cap, P/E)
                     });
                 </script>
             </div>
         </div>
 
-        <footer class="mt-12 text-center text-gray-500 text-sm">
-            &copy; 2026 SAHAMPRO - Analisa Teknikal & Fundamental Terintegrasi
-        </footer>
-    </div>
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+            <div class="bg-[#1e293b] p-6 rounded-2xl border border-gray-800">
+                <h2 class="text-xl font-bold mb-4 text-emerald-400">Data Fundamental</h2>
+                <div class="tradingview-widget-container">
+                    <div class="tradingview-widget-container__widget"></div>
+                    <script type="text/javascript" src="https://s3.tradingview.com/external-embedding/embed-widget-financials.js">
+                    {
+                        "symbol": "IDX:BBRI",
+                        "colorTheme": "dark",
+                        "isTransparent": true,
+                        "displayMode": "regular",
+                        "width": "100%",
+                        "height": 400
+                    }
+                    </script>
+                </div>
+            </div>
 
+            <div class="bg-[#1e293b] p-6 rounded-2xl border border-gray-800">
+                <h2 class="text-xl font-bold mb-4 text-emerald-400">Bandarmologi & Market Flow</h2>
+                <p class="text-sm text-gray-400 mb-4">Pantau akumulasi asing dan pergerakan Big Player di pasar.</p>
+                <div class="tradingview-widget-container">
+                    <div class="tradingview-widget-container__widget"></div>
+                    <script type="text/javascript" src="https://s3.tradingview.com/external-embedding/embed-widget-market-quotes.js">
+                    {
+                        "symbolsGroups": [
+                            { "name": "Indeks Utama", "symbols": [ { "name": "IDX:COMPOSITE" } ] },
+                            { "name": "Saham Populer", "symbols": [ { "name": "IDX:BBCA" }, { "name": "IDX:BBRI" }, { "name": "IDX:TLKM" }, { "name": "IDX:ASII" } ] }
+                        ],
+                        "colorTheme": "dark",
+                        "isTransparent": true,
+                        "width": "100%",
+                        "height": 400
+                    }
+                    </script>
+                </div>
+            </div>
+        </div>
+    </div>
 </body>
 </html>
