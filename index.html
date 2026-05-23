@@ -3,114 +3,328 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>IDX Smart Analyzer</title>
+  <title>IDX Smart Analyzer Pro</title>
 
   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-gradient"></script>
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
 
   <style>
+
+    :root{
+      --bg:#020617;
+      --card:#0f172a;
+      --card2:#111827;
+      --primary:#38bdf8;
+      --green:#22c55e;
+      --red:#ef4444;
+      --yellow:#facc15;
+      --text:#f8fafc;
+      --muted:#94a3b8;
+      --border:rgba(255,255,255,0.08);
+    }
+
     *{
       margin:0;
       padding:0;
       box-sizing:border-box;
-      font-family:Arial, sans-serif;
+      font-family:'Inter', sans-serif;
     }
 
     body{
-      background:#0f172a;
-      color:white;
-      padding:20px;
+      min-height:100vh;
+      background:
+      radial-gradient(circle at top left,#0f172a 0%, transparent 30%),
+      radial-gradient(circle at bottom right,#082f49 0%, transparent 25%),
+      var(--bg);
+
+      color:var(--text);
+      padding:30px;
     }
 
-    h1{
-      text-align:center;
-      margin-bottom:20px;
-      color:#38bdf8;
+    .topbar{
+      display:flex;
+      justify-content:space-between;
+      align-items:center;
+      margin-bottom:30px;
+      flex-wrap:wrap;
+      gap:20px;
+    }
+
+    .title-box h1{
+      font-size:38px;
+      font-weight:800;
+      background:linear-gradient(to right,#38bdf8,#22d3ee);
+      -webkit-background-clip:text;
+      -webkit-text-fill-color:transparent;
+    }
+
+    .title-box p{
+      color:var(--muted);
+      margin-top:8px;
     }
 
     .search-box{
       display:flex;
-      justify-content:center;
-      margin-bottom:20px;
+      align-items:center;
+      background:rgba(255,255,255,0.05);
+      padding:10px;
+      border-radius:18px;
+      border:1px solid rgba(255,255,255,0.08);
+      backdrop-filter:blur(10px);
+      box-shadow:0 10px 30px rgba(0,0,0,0.3);
     }
 
     input{
-      width:300px;
-      padding:12px;
+      width:260px;
+      padding:14px;
       border:none;
-      border-radius:10px;
+      background:transparent;
+      color:white;
       outline:none;
       font-size:16px;
     }
 
-    button{
-      padding:12px 20px;
-      margin-left:10px;
-      border:none;
-      border-radius:10px;
-      background:#38bdf8;
-      color:white;
-      cursor:pointer;
-      font-weight:bold;
+    input::placeholder{
+      color:#94a3b8;
     }
 
-    .container{
+    button{
+      border:none;
+      padding:14px 22px;
+      border-radius:14px;
+      background:linear-gradient(135deg,#0ea5e9,#38bdf8);
+      color:white;
+      font-weight:700;
+      cursor:pointer;
+      transition:0.3s;
+      box-shadow:0 10px 25px rgba(14,165,233,0.35);
+    }
+
+    button:hover{
+      transform:translateY(-2px) scale(1.02);
+      box-shadow:0 15px 35px rgba(14,165,233,0.5);
+    }
+
+    .dashboard{
       display:grid;
       grid-template-columns:repeat(auto-fit,minmax(350px,1fr));
-      gap:20px;
+      gap:24px;
     }
 
     .card{
-      background:#1e293b;
-      padding:20px;
-      border-radius:15px;
-      box-shadow:0 0 10px rgba(0,0,0,0.3);
+      position:relative;
+      overflow:hidden;
+      background:linear-gradient(
+      145deg,
+      rgba(15,23,42,0.95),
+      rgba(17,24,39,0.95));
+
+      border:1px solid var(--border);
+
+      border-radius:28px;
+      padding:24px;
+
+      backdrop-filter:blur(20px);
+
+      box-shadow:
+      0 10px 30px rgba(0,0,0,0.35),
+      inset 0 1px 1px rgba(255,255,255,0.05);
+
+      transition:0.35s;
+    }
+
+    .card:hover{
+      transform:translateY(-6px);
+      box-shadow:
+      0 25px 50px rgba(0,0,0,0.45),
+      0 0 30px rgba(56,189,248,0.15);
+    }
+
+    .card::before{
+      content:'';
+      position:absolute;
+      width:200px;
+      height:200px;
+      background:radial-gradient(circle,rgba(56,189,248,0.15),transparent 70%);
+      top:-80px;
+      right:-80px;
     }
 
     .card h2{
-      margin-bottom:15px;
-      color:#38bdf8;
+      font-size:20px;
+      margin-bottom:22px;
+      color:#e2e8f0;
+      display:flex;
+      align-items:center;
+      gap:10px;
+    }
+
+    .card h2::before{
+      content:'';
+      width:10px;
+      height:10px;
+      border-radius:50%;
+      background:var(--primary);
+      box-shadow:0 0 15px var(--primary);
     }
 
     .data-row{
       display:flex;
       justify-content:space-between;
-      margin-bottom:10px;
+      align-items:center;
+      padding:14px 0;
+      border-bottom:1px solid rgba(255,255,255,0.06);
     }
 
-    canvas{
-      background:white;
-      border-radius:10px;
-      padding:10px;
+    .data-row:last-child{
+      border:none;
+    }
+
+    .data-row span:first-child{
+      color:var(--muted);
+      font-weight:500;
+    }
+
+    .data-row span:last-child{
+      font-weight:700;
+      font-size:15px;
     }
 
     .buy{
-      color:#22c55e;
-      font-weight:bold;
+      color:var(--green);
+      font-weight:800;
+      text-shadow:0 0 10px rgba(34,197,94,0.5);
     }
 
     .sell{
-      color:#ef4444;
-      font-weight:bold;
+      color:var(--red);
+      font-weight:800;
+      text-shadow:0 0 10px rgba(239,68,68,0.5);
     }
 
     .neutral{
-      color:#facc15;
-      font-weight:bold;
+      color:var(--yellow);
+      font-weight:800;
     }
+
+    .signal-box{
+      margin-top:25px;
+      padding:18px;
+      border-radius:18px;
+      background:rgba(255,255,255,0.04);
+      text-align:center;
+      border:1px solid rgba(255,255,255,0.06);
+    }
+
+    .signal-box h3{
+      margin-bottom:10px;
+      color:#cbd5e1;
+    }
+
+    canvas{
+      margin-top:20px;
+      background:rgba(255,255,255,0.97);
+      border-radius:20px;
+      padding:12px;
+    }
+
+    .glow{
+      position:absolute;
+      inset:0;
+      border-radius:28px;
+      pointer-events:none;
+      border:1px solid rgba(255,255,255,0.04);
+    }
+
+    .mini-stats{
+      display:grid;
+      grid-template-columns:repeat(2,1fr);
+      gap:14px;
+      margin-bottom:20px;
+    }
+
+    .mini-card{
+      background:rgba(255,255,255,0.04);
+      padding:16px;
+      border-radius:18px;
+      border:1px solid rgba(255,255,255,0.05);
+    }
+
+    .mini-card small{
+      color:var(--muted);
+      display:block;
+      margin-bottom:6px;
+    }
+
+    .mini-card h3{
+      font-size:22px;
+    }
+
+    @media(max-width:768px){
+
+      body{
+        padding:18px;
+      }
+
+      .topbar{
+        flex-direction:column;
+        align-items:flex-start;
+      }
+
+      .search-box{
+        width:100%;
+      }
+
+      input{
+        width:100%;
+      }
+
+    }
+
   </style>
 </head>
+
 <body>
 
-  <h1>IDX SMART ANALYZER</h1>
+  <div class="topbar">
 
-  <div class="search-box">
-    <input type="text" id="stockInput" placeholder="Contoh: BBCA">
-    <button onclick="loadStock()">Analisa</button>
+    <div class="title-box">
+      <h1>IDX SMART ANALYZER</h1>
+      <p>Analisa saham modern dengan tampilan premium</p>
+    </div>
+
+    <div class="search-box">
+      <input type="text" id="stockInput" placeholder="Contoh: BBCA">
+      <button onclick="loadStock()">Analisa</button>
+    </div>
+
   </div>
 
-  <div class="container">
+  <div class="mini-stats">
+
+    <div class="mini-card">
+      <small>IHSG</small>
+      <h3>7,245</h3>
+    </div>
+
+    <div class="mini-card">
+      <small>Market Sentiment</small>
+      <h3 class="buy">Bullish</h3>
+    </div>
+
+  </div>
+
+  <div class="dashboard">
+
+    <!-- FUNDAMENTAL -->
 
     <div class="card">
+
+      <div class="glow"></div>
+
       <h2>Fundamental</h2>
 
       <div class="data-row">
@@ -135,7 +349,12 @@
 
     </div>
 
+    <!-- TECHNICAL -->
+
     <div class="card">
+
+      <div class="glow"></div>
+
       <h2>Technical</h2>
 
       <div class="data-row">
@@ -154,9 +373,15 @@
       </div>
 
       <canvas id="priceChart"></canvas>
+
     </div>
 
+    <!-- BANDARMOLOGY -->
+
     <div class="card">
+
+      <div class="glow"></div>
+
       <h2>Bandarmology</h2>
 
       <div class="data-row">
@@ -174,9 +399,9 @@
         <span id="topsell">-</span>
       </div>
 
-      <div class="data-row">
-        <span>Signal</span>
-        <span id="signal" class="neutral">NEUTRAL</span>
+      <div class="signal-box">
+        <h3>Signal</h3>
+        <div id="signal" class="neutral">NEUTRAL</div>
       </div>
 
     </div>
@@ -196,9 +421,7 @@ async function loadStock(){
     return;
   }
 
-  // Dummy data sementara
-  // Nanti bisa diganti API real
-
+  // Dummy data
   const fundamental = {
     per: (Math.random()*20).toFixed(2),
     pbv: (Math.random()*5).toFixed(2),
@@ -218,18 +441,16 @@ async function loadStock(){
     topsell: "PD"
   };
 
-  // Fundamental
+  // Render data
   document.getElementById("per").innerText = fundamental.per;
   document.getElementById("pbv").innerText = fundamental.pbv;
   document.getElementById("roe").innerText = fundamental.roe;
   document.getElementById("marketcap").innerText = fundamental.marketcap;
 
-  // Technical
   document.getElementById("rsi").innerText = technical.rsi;
   document.getElementById("macd").innerText = technical.macd;
   document.getElementById("trend").innerText = technical.trend;
 
-  // Bandar
   document.getElementById("foreign").innerText = bandar.foreign;
   document.getElementById("topbuy").innerText = bandar.topbuy;
   document.getElementById("topsell").innerText = bandar.topsell;
@@ -238,16 +459,24 @@ async function loadStock(){
   const signal = document.getElementById("signal");
 
   if(technical.trend === "Bullish"){
+
     signal.innerText = "AKUMULASI";
     signal.className = "buy";
+
   }else{
+
     signal.innerText = "DISTRIBUSI";
     signal.className = "sell";
+
   }
 
-  // Chart
+  // Chart Data
   const labels = ["Sen","Sel","Rab","Kam","Jum"];
-  const prices = Array.from({length:5},()=>Math.floor(Math.random()*1000));
+
+  const prices = Array.from(
+    {length:5},
+    ()=>Math.floor(Math.random()*1000)+500
+  );
 
   if(chart){
     chart.destroy();
@@ -256,15 +485,90 @@ async function loadStock(){
   const ctx = document.getElementById('priceChart');
 
   chart = new Chart(ctx, {
+
     type:'line',
+
     data:{
       labels:labels,
+
       datasets:[{
+
         label:stock,
+
         data:prices,
-        tension:0.4
+
+        borderWidth:3,
+
+        tension:0.45,
+
+        fill:true,
+
+        pointRadius:5,
+
+        pointHoverRadius:8,
+
+        backgroundColor:(context)=>{
+
+          const chart = context.chart;
+          const {ctx, chartArea} = chart;
+
+          if(!chartArea){
+            return null;
+          }
+
+          const gradient = ctx.createLinearGradient(
+            0,
+            chartArea.top,
+            0,
+            chartArea.bottom
+          );
+
+          gradient.addColorStop(0,'rgba(56,189,248,0.5)');
+          gradient.addColorStop(1,'rgba(56,189,248,0)');
+
+          return gradient;
+        },
+
+        borderColor:'#0ea5e9',
+
+        pointBackgroundColor:'#0284c7'
+
       }]
+    },
+
+    options:{
+
+      responsive:true,
+
+      plugins:{
+        legend:{
+          labels:{
+            color:'#0f172a',
+            font:{
+              weight:'bold'
+            }
+          }
+        }
+      },
+
+      scales:{
+
+        y:{
+          ticks:{
+            color:'#334155'
+          }
+        },
+
+        x:{
+          ticks:{
+            color:'#334155'
+          }
+        }
+
+      }
+
     }
+
   });
 
 }
