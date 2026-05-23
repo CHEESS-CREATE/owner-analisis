@@ -1,186 +1,271 @@
 <!DOCTYPE html>
 <html lang="id">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>SahamPro Analytics</title>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>IDX Smart Analyzer</title>
 
-<style>
-body{
-font-family:Arial,sans-serif;
-background:#0f172a;
-color:white;
-margin:0;
-padding:0;
-}
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 
-header{
-background:#1e293b;
-padding:20px;
-text-align:center;
-}
+  <style>
+    *{
+      margin:0;
+      padding:0;
+      box-sizing:border-box;
+      font-family:Arial, sans-serif;
+    }
 
-.container{
-padding:20px;
-}
+    body{
+      background:#0f172a;
+      color:white;
+      padding:20px;
+    }
 
-.card{
-background:#1e293b;
-padding:20px;
-border-radius:15px;
-margin-bottom:20px;
-}
+    h1{
+      text-align:center;
+      margin-bottom:20px;
+      color:#38bdf8;
+    }
 
-input{
-width:100%;
-padding:12px;
-border-radius:10px;
-border:none;
-margin-top:10px;
-}
+    .search-box{
+      display:flex;
+      justify-content:center;
+      margin-bottom:20px;
+    }
 
-button{
-background:#16a34a;
-color:white;
-border:none;
-padding:10px 20px;
-border-radius:10px;
-cursor:pointer;
-margin-top:10px;
-}
+    input{
+      width:300px;
+      padding:12px;
+      border:none;
+      border-radius:10px;
+      outline:none;
+      font-size:16px;
+    }
 
-.grid{
-display:grid;
-grid-template-columns:repeat(auto-fit,minmax(300px,1fr));
-gap:20px;
-}
+    button{
+      padding:12px 20px;
+      margin-left:10px;
+      border:none;
+      border-radius:10px;
+      background:#38bdf8;
+      color:white;
+      cursor:pointer;
+      font-weight:bold;
+    }
 
-.metric{
-font-size:22px;
-font-weight:bold;
-}
+    .container{
+      display:grid;
+      grid-template-columns:repeat(auto-fit,minmax(350px,1fr));
+      gap:20px;
+    }
 
-.green{
-color:#22c55e;
-}
+    .card{
+      background:#1e293b;
+      padding:20px;
+      border-radius:15px;
+      box-shadow:0 0 10px rgba(0,0,0,0.3);
+    }
 
-.red{
-color:#ef4444;
-}
-</style>
+    .card h2{
+      margin-bottom:15px;
+      color:#38bdf8;
+    }
+
+    .data-row{
+      display:flex;
+      justify-content:space-between;
+      margin-bottom:10px;
+    }
+
+    canvas{
+      background:white;
+      border-radius:10px;
+      padding:10px;
+    }
+
+    .buy{
+      color:#22c55e;
+      font-weight:bold;
+    }
+
+    .sell{
+      color:#ef4444;
+      font-weight:bold;
+    }
+
+    .neutral{
+      color:#facc15;
+      font-weight:bold;
+    }
+  </style>
 </head>
-
 <body>
 
-<header>
-<h1>📈 SAHAMPRO Analytics</h1>
-<p>Fundamental • Teknikal • Bandarmology</p>
-</header>
+  <h1>IDX SMART ANALYZER</h1>
 
-<div class="container">
+  <div class="search-box">
+    <input type="text" id="stockInput" placeholder="Contoh: BBCA">
+    <button onclick="loadStock()">Analisa</button>
+  </div>
 
-<div class="card">
-<h2>Cari Saham BEI</h2>
+  <div class="container">
 
-<input id="stockInput" placeholder="Contoh: BBCA">
+    <div class="card">
+      <h2>Fundamental</h2>
 
-<button onclick="analyze()">
-Analisa
-</button>
-</div>
+      <div class="data-row">
+        <span>PER</span>
+        <span id="per">-</span>
+      </div>
 
+      <div class="data-row">
+        <span>PBV</span>
+        <span id="pbv">-</span>
+      </div>
 
-<div class="grid">
+      <div class="data-row">
+        <span>ROE</span>
+        <span id="roe">-</span>
+      </div>
 
-<div class="card">
-<h2>Fundamental</h2>
+      <div class="data-row">
+        <span>Market Cap</span>
+        <span id="marketcap">-</span>
+      </div>
 
-<div>PER:
-<span class="metric">15.2</span>
-</div>
+    </div>
 
-<div>PBV:
-<span class="metric">4.5</span>
-</div>
+    <div class="card">
+      <h2>Technical</h2>
 
-<div>ROE:
-<span class="metric green">
-22%
-</span>
-</div>
+      <div class="data-row">
+        <span>RSI</span>
+        <span id="rsi">-</span>
+      </div>
 
-<div>DER:
-<span class="metric">
-0.9
-</span>
-</div>
+      <div class="data-row">
+        <span>MACD</span>
+        <span id="macd">-</span>
+      </div>
 
-</div>
+      <div class="data-row">
+        <span>Trend</span>
+        <span id="trend">-</span>
+      </div>
 
-<div class="card">
-<h2>Teknikal</h2>
+      <canvas id="priceChart"></canvas>
+    </div>
 
-<div>RSI:
-<span class="metric">
-67
-</span>
-</div>
+    <div class="card">
+      <h2>Bandarmology</h2>
 
-<div>MACD:
-<span class="metric green">
-Bullish
-</span>
-</div>
+      <div class="data-row">
+        <span>Foreign Flow</span>
+        <span id="foreign">-</span>
+      </div>
 
-<div>EMA Trend:
-<span class="metric green">
-Uptrend
-</span>
-</div>
+      <div class="data-row">
+        <span>Broker Top Buy</span>
+        <span id="topbuy">-</span>
+      </div>
 
-</div>
+      <div class="data-row">
+        <span>Broker Top Sell</span>
+        <span id="topsell">-</span>
+      </div>
 
-<div class="card">
+      <div class="data-row">
+        <span>Signal</span>
+        <span id="signal" class="neutral">NEUTRAL</span>
+      </div>
 
-<h2>Bandarmology</h2>
+    </div>
 
-<div>Foreign Flow:
-<span class="metric green">
-+Rp120M
-</span>
-</div>
-
-<div>Broker Akumulasi:
-<span class="metric">
-XL, YP, CC
-</span>
-</div>
-
-<div>Status:
-<span class="metric green">
-Akumulasi Bandar
-</span>
-</div>
-
-</div>
-
-</div>
-
-</div>
+  </div>
 
 <script>
 
-function analyze(){
+let chart;
 
-let stock =
-document.getElementById(
-'stockInput'
-).value;
+async function loadStock(){
 
-alert(
-"Analisa " + stock +
-" akan mengambil data API"
-);
+  const stock = document.getElementById("stockInput").value.toUpperCase();
+
+  if(!stock){
+    alert("Masukkan kode saham");
+    return;
+  }
+
+  // Dummy data sementara
+  // Nanti bisa diganti API real
+
+  const fundamental = {
+    per: (Math.random()*20).toFixed(2),
+    pbv: (Math.random()*5).toFixed(2),
+    roe: (Math.random()*30).toFixed(2)+"%",
+    marketcap: "Rp " + (Math.random()*500).toFixed(0) + " T"
+  };
+
+  const technical = {
+    rsi: (Math.random()*100).toFixed(2),
+    macd: (Math.random()*10).toFixed(2),
+    trend: Math.random() > 0.5 ? "Bullish" : "Bearish"
+  };
+
+  const bandar = {
+    foreign: Math.random() > 0.5 ? "Net Buy" : "Net Sell",
+    topbuy: "XL",
+    topsell: "PD"
+  };
+
+  // Fundamental
+  document.getElementById("per").innerText = fundamental.per;
+  document.getElementById("pbv").innerText = fundamental.pbv;
+  document.getElementById("roe").innerText = fundamental.roe;
+  document.getElementById("marketcap").innerText = fundamental.marketcap;
+
+  // Technical
+  document.getElementById("rsi").innerText = technical.rsi;
+  document.getElementById("macd").innerText = technical.macd;
+  document.getElementById("trend").innerText = technical.trend;
+
+  // Bandar
+  document.getElementById("foreign").innerText = bandar.foreign;
+  document.getElementById("topbuy").innerText = bandar.topbuy;
+  document.getElementById("topsell").innerText = bandar.topsell;
+
+  // Signal
+  const signal = document.getElementById("signal");
+
+  if(technical.trend === "Bullish"){
+    signal.innerText = "AKUMULASI";
+    signal.className = "buy";
+  }else{
+    signal.innerText = "DISTRIBUSI";
+    signal.className = "sell";
+  }
+
+  // Chart
+  const labels = ["Sen","Sel","Rab","Kam","Jum"];
+  const prices = Array.from({length:5},()=>Math.floor(Math.random()*1000));
+
+  if(chart){
+    chart.destroy();
+  }
+
+  const ctx = document.getElementById('priceChart');
+
+  chart = new Chart(ctx, {
+    type:'line',
+    data:{
+      labels:labels,
+      datasets:[{
+        label:stock,
+        data:prices,
+        tension:0.4
+      }]
+    }
+  });
 
 }
 
