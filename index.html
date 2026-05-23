@@ -2,31 +2,71 @@
 <html lang="id">
 <head>
     <meta charset="UTF-8">
-    <title>SAHAMPRO - Dashboard Terpadu</title>
+    <title>SAHAMPRO - Dashboard Pro</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <style>body { background-color: #0f172a; color: white; font-family: sans-serif; }</style>
 </head>
-<body class="p-4">
-    <h1 class="text-2xl font-bold mb-4 text-emerald-400">SAHAMPRO Dashboard</h1>
-    
-    <div class="tradingview-widget-container" style="height: 800px; width: 100%;">
-        <div id="tradingview_full_chart" style="height: 100%; width: 100%;"></div>
-        <script type="text/javascript" src="https://s3.tradingview.com/tv.js"></script>
-        <script type="text/javascript">
-            new TradingView.widget({
-                "container_id": "tradingview_full_chart",
-                "symbol": "IDX:CUAN",
-                "theme": "dark",
-                "autosize": true,
-                "interval": "D",
-                "timezone": "Asia/Jakarta",
-                "allow_symbol_change": true,
-                "details": true,     // Memunculkan data fundamental di sisi kanan
-                "hotlist": true,     // Memunculkan market flow/bandarmologi sederhana
-                "calendar": true,
-                "support_host": "https://www.tradingview.com"
-            });
-        </script>
+<body class="p-2 md:p-4">
+
+    <h1 class="text-2xl font-black mb-4 text-emerald-400 border-l-4 border-emerald-500 pl-3">SAHAMPRO Dashboard</h1>
+
+    <div class="grid grid-cols-1 lg:grid-cols-3 gap-4">
+        
+        <div class="lg:col-span-2 h-[500px]">
+            <div class="tradingview-widget-container" style="height:100%;width:100%">
+                <div id="tv_chart" style="height:100%;width:100%"></div>
+                <script type="text/javascript" src="https://s3.tradingview.com/tv.js"></script>
+                <script type="text/javascript">
+                    new TradingView.widget({
+                        "container_id": "tv_chart",
+                        "symbol": "IDX:CUAN",
+                        "theme": "dark",
+                        "autosize": true,
+                        "interval": "D",
+                        "allow_symbol_change": true,
+                        "details": true
+                    });
+                </script>
+            </div>
+        </div>
+
+        <div class="h-[500px]">
+            <div class="tradingview-widget-container" style="height:100%;width:100%">
+                <div id="tv_market" style="height:100%;width:100%"></div>
+                <script type="text/javascript">
+                    new TradingView.widget({
+                        "container_id": "tv_market",
+                        "width": "100%",
+                        "height": "100%",
+                        "symbolsGroups": [
+                            {"name": "IHSG & BLUECHIP", "symbols": [{"name": "IDX:COMPOSITE"}, {"name": "IDX:BBCA"}, {"name": "IDX:BBRI"}, {"name": "IDX:TLKM"}]},
+                            {"name": "GLOBAL", "symbols": [{"name": "FX_IDC:USDIDR"}, {"name": "US10Y"}]}
+                        ],
+                        "showSymbolLogo": true,
+                        "colorTheme": "dark",
+                        "isTransparent": true
+                    });
+                </script>
+            </div>
+        </div>
+
+        <div class="lg:col-span-3 h-[400px]">
+            <div class="tradingview-widget-container" style="height:100%;width:100%">
+                <div id="tv_news" style="height:100%;width:100%"></div>
+                <script type="text/javascript">
+                    new TradingView.widget({
+                        "container_id": "tv_news",
+                        "feedMode": "market",
+                        "market": "stock",
+                        "isTransparent": true,
+                        "displayMode": "regular",
+                        "width": "100%",
+                        "height": "100%",
+                        "colorTheme": "dark"
+                    });
+                </script>
+            </div>
+        </div>
     </div>
 </body>
 </html>
