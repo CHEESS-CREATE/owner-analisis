@@ -1,72 +1,190 @@
 <!DOCTYPE html>
 <html lang="id">
 <head>
-    <meta charset="UTF-8">
-    <title>SAHAMPRO - Dashboard Pro</title>
-    <script src="https://cdn.tailwindcss.com"></script>
-    <style>body { background-color: #0f172a; color: white; font-family: sans-serif; }</style>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>SahamPro Analytics</title>
+
+<style>
+body{
+font-family:Arial,sans-serif;
+background:#0f172a;
+color:white;
+margin:0;
+padding:0;
+}
+
+header{
+background:#1e293b;
+padding:20px;
+text-align:center;
+}
+
+.container{
+padding:20px;
+}
+
+.card{
+background:#1e293b;
+padding:20px;
+border-radius:15px;
+margin-bottom:20px;
+}
+
+input{
+width:100%;
+padding:12px;
+border-radius:10px;
+border:none;
+margin-top:10px;
+}
+
+button{
+background:#16a34a;
+color:white;
+border:none;
+padding:10px 20px;
+border-radius:10px;
+cursor:pointer;
+margin-top:10px;
+}
+
+.grid{
+display:grid;
+grid-template-columns:repeat(auto-fit,minmax(300px,1fr));
+gap:20px;
+}
+
+.metric{
+font-size:22px;
+font-weight:bold;
+}
+
+.green{
+color:#22c55e;
+}
+
+.red{
+color:#ef4444;
+}
+</style>
 </head>
-<body class="p-2 md:p-4">
 
-    <h1 class="text-2xl font-black mb-4 text-emerald-400 border-l-4 border-emerald-500 pl-3">SAHAMPRO Dashboard</h1>
+<body>
 
-    <div class="grid grid-cols-1 lg:grid-cols-3 gap-4">
-        
-        <div class="lg:col-span-2 h-[500px]">
-            <div class="tradingview-widget-container" style="height:100%;width:100%">
-                <div id="tv_chart" style="height:100%;width:100%"></div>
-                <script type="text/javascript" src="https://s3.tradingview.com/tv.js"></script>
-                <script type="text/javascript">
-                    new TradingView.widget({
-                        "container_id": "tv_chart",
-                        "symbol": "IDX:CUAN",
-                        "theme": "dark",
-                        "autosize": true,
-                        "interval": "D",
-                        "allow_symbol_change": true,
-                        "details": true
-                    });
-                </script>
-            </div>
-        </div>
+<header>
+<h1>📈 SAHAMPRO Analytics</h1>
+<p>Fundamental • Teknikal • Bandarmology</p>
+</header>
 
-        <div class="h-[500px]">
-            <div class="tradingview-widget-container" style="height:100%;width:100%">
-                <div id="tv_market" style="height:100%;width:100%"></div>
-                <script type="text/javascript">
-                    new TradingView.widget({
-                        "container_id": "tv_market",
-                        "width": "100%",
-                        "height": "100%",
-                        "symbolsGroups": [
-                            {"name": "IHSG & BLUECHIP", "symbols": [{"name": "IDX:COMPOSITE"}, {"name": "IDX:BBCA"}, {"name": "IDX:BBRI"}, {"name": "IDX:TLKM"}]},
-                            {"name": "GLOBAL", "symbols": [{"name": "FX_IDC:USDIDR"}, {"name": "US10Y"}]}
-                        ],
-                        "showSymbolLogo": true,
-                        "colorTheme": "dark",
-                        "isTransparent": true
-                    });
-                </script>
-            </div>
-        </div>
+<div class="container">
 
-        <div class="lg:col-span-3 h-[400px]">
-            <div class="tradingview-widget-container" style="height:100%;width:100%">
-                <div id="tv_news" style="height:100%;width:100%"></div>
-                <script type="text/javascript">
-                    new TradingView.widget({
-                        "container_id": "tv_news",
-                        "feedMode": "market",
-                        "market": "stock",
-                        "isTransparent": true,
-                        "displayMode": "regular",
-                        "width": "100%",
-                        "height": "100%",
-                        "colorTheme": "dark"
-                    });
-                </script>
-            </div>
-        </div>
-    </div>
+<div class="card">
+<h2>Cari Saham BEI</h2>
+
+<input id="stockInput" placeholder="Contoh: BBCA">
+
+<button onclick="analyze()">
+Analisa
+</button>
+</div>
+
+
+<div class="grid">
+
+<div class="card">
+<h2>Fundamental</h2>
+
+<div>PER:
+<span class="metric">15.2</span>
+</div>
+
+<div>PBV:
+<span class="metric">4.5</span>
+</div>
+
+<div>ROE:
+<span class="metric green">
+22%
+</span>
+</div>
+
+<div>DER:
+<span class="metric">
+0.9
+</span>
+</div>
+
+</div>
+
+<div class="card">
+<h2>Teknikal</h2>
+
+<div>RSI:
+<span class="metric">
+67
+</span>
+</div>
+
+<div>MACD:
+<span class="metric green">
+Bullish
+</span>
+</div>
+
+<div>EMA Trend:
+<span class="metric green">
+Uptrend
+</span>
+</div>
+
+</div>
+
+<div class="card">
+
+<h2>Bandarmology</h2>
+
+<div>Foreign Flow:
+<span class="metric green">
++Rp120M
+</span>
+</div>
+
+<div>Broker Akumulasi:
+<span class="metric">
+XL, YP, CC
+</span>
+</div>
+
+<div>Status:
+<span class="metric green">
+Akumulasi Bandar
+</span>
+</div>
+
+</div>
+
+</div>
+
+</div>
+
+<script>
+
+function analyze(){
+
+let stock =
+document.getElementById(
+'stockInput'
+).value;
+
+alert(
+"Analisa " + stock +
+" akan mengambil data API"
+);
+
+}
+
+</script>
+
 </body>
 </html>
